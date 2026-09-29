@@ -26,3 +26,23 @@ const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+// 1. استقبال الرسائل من السيرفر وعرضها للجميع
+socket.on('message', (msg) => {
+    appendMessage(msg); // أو استدعِ الدالة التي تضيف الرسالة للواجهة لديك
+});
+
+// 2. إرسال الرسالة عند الضغط على زر الإرسال أو Enter
+const chatForm = document.getElementById('chatForm'); // تأكد من ID نموذج الإرسال لديك
+const messageInput = document.getElementById('messageInput'); // تأكد من ID خانة النص
+
+if (chatForm) {
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const msgText = messageInput.value.trim();
+        if (msgText) {
+            // إرسال الرسالة إلى السيرفر
+            socket.emit('chatMessage', msgText);
+            messageInput.value = ''; // مسح خانة الكتابة
+        }
+    });
+}
